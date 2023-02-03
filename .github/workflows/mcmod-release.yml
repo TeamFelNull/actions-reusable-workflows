@@ -63,8 +63,7 @@ jobs:
           echo "Single platform..."
           cp -r ../build/libs/. ./
           fi
-          
-          echo "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:

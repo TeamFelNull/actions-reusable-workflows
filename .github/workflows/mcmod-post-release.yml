@@ -1,0 +1,20 @@
+on:
+  workflow_call:
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup
+
+      - name: Update Changelog and Version Check
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck
