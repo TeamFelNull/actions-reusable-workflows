@@ -54,9 +54,16 @@ jobs:
         run: |
           mkdir release
           cd release
+          
+          if [ -d ../fabric/build/libs ] && [ -d ../forge/build/libs ]; then
+          echo "Cloth platform..."
           cp -r ../fabric/build/libs/. ./
           cp -r ../forge/build/libs/. ./
-          ls
+          else
+          echo "Single platform..."
+          cp -r ../build/libs/. ./
+          fi
+          
           echo "${{ secrets.GITHUB_TOKEN }}"
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
