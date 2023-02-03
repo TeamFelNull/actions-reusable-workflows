@@ -13,4 +13,4 @@ jobs:
           pwd
           ls
       - name: ST2
-        uses: .github/actions/setup@master
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/setup@master
