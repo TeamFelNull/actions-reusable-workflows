@@ -1,0 +1,60 @@
+on:
+  workflow_call:
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
+
+      - name: Verification
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-release-verification@master
+        with:
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN_MORI }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN_MORI }}
+          maven-password: ${{ secrets.MAVEN_PASSWORD }}
+
+      - name: Generate Changelog
+        shell: bash
+        run: |
+          ./gradlew patchChangelog
+          ./gradlew getChangelog --console=plain -q --no-header --no-summary --no-links > LATEST_CHANGELOG.md
+
+      - name: Build And Release
+        shell: bash
+        run: |
+          ./gradlew build publish curseforge modrinth --stacktrace --no-daemon
+        env:
+          curesforgeapikey: ${{ secrets.CURSEFORGE_TOKEN_MORI }}
+          modrinthapikey:  ${{ secrets.MODRINTH_TOKEN_MORI }}
+          mavenpassword: ${{ secrets.MAVEN_PASSWORD }}
+
+      - name: Collect Releases
+        shell: bash
+        run: |
+          mkdir release
+          cd release
+          cp -r ../fabric/build/libs/. ./
+          cp -r ../forge/build/libs/. ./
+          ls
+          echo "${{ secrets.GITHUB_TOKEN }}"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: releases
+          path: release/*
+
+      - name: GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: LATEST_CHANGELOG.md
+          files: release/*
