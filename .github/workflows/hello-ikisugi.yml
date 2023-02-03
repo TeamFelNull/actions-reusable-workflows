@@ -12,3 +12,5 @@ jobs:
         run: |
           pwd
           ls
+      - name: ST2
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/setup@master
