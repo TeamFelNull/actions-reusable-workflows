@@ -1,5 +1,16 @@
 on:
   workflow_call:
+    inputs:
+      build_tasks:
+        required: true
+        type: string
+    secrets:
+      curseforge_token:
+        required: false
+      modrinth_token:
+        required: false
+      maven_password:
+        required: false
 defaults:
   run:
     shell: bash
@@ -19,9 +30,9 @@ jobs:
       - name: Verification
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-release-verification@master
         with:
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN_MORI }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN_MORI }}
-          maven-password: ${{ secrets.MAVEN_PASSWORD }}
+          curseforge-token: ${{ secrets.curseforge_token }}
+          modrinth-token: ${{ secrets.modrinth_token }}
+          maven-password: ${{ secrets.maven_password }}
 
       - name: Generate Changelog
         shell: bash
@@ -32,11 +43,11 @@ jobs:
       - name: Build And Release
         shell: bash
         run: |
-          ./gradlew build publish curseforge modrinth --stacktrace --no-daemon
+          ./gradlew ${{ inputs.build_tasks }} --stacktrace --no-daemon
         env:
-          curesforgeapikey: ${{ secrets.CURSEFORGE_TOKEN_MORI }}
-          modrinthapikey:  ${{ secrets.MODRINTH_TOKEN_MORI }}
-          mavenpassword: ${{ secrets.MAVEN_PASSWORD }}
+          curesforgeapikey: ${{ secrets.curseforge_token }}
+          modrinthapikey:  ${{ secrets.modrinth_token }}
+          mavenpassword: ${{ secrets.maven_password }}
 
       - name: Collect Releases
         shell: bash
