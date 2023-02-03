@@ -25,10 +25,10 @@ jobs:
           fetch-depth: 0
 
       - name: Setup
-        uses: ${{ github.action_path }}/.github/actions/mcmod-setup@master
+        uses: ${{ github.action_path }}/.github/actions/mcmod-setup
 
       - name: Verification
-        uses: ${{ github.action_path }}/.github/actions/mcmod-release-verification@master
+        uses: ${{ github.action_path }}/.github/actions/mcmod-release-verification
         with:
           curseforge-token: ${{ secrets.curseforge_token }}
           modrinth-token: ${{ secrets.modrinth_token }}
