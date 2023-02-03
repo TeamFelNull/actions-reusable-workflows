@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup
-        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
 
       - name: Update Changelog and Version Check
-        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck@master
