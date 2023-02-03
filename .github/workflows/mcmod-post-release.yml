@@ -5,7 +5,7 @@ defaults:
     shell: bash
 
 jobs:
-  build:
+  post:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

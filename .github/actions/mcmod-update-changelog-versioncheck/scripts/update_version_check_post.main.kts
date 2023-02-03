@@ -13,51 +13,22 @@ import com.vdurmont.semver4j.Semver
 import com.vdurmont.semver4j.SemverException
 import java.io.*
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.stream.Collectors
-
-val rawVersion = args[0]
-val rawChangeLog = args[1]
-val repo = args[2]
 
 val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-val vcName = "version_check.json"
+val revJo: JsonObject = gson.fromJson(args[0], JsonObject::class.java)
+
+val version: String = revJo.get("version").asString
+val defaultHomepage: String = revJo.get("default_homepage").asString
+val mcVersions = revJo.getAsJsonArray("mc_versions").asList().map { it.asString }.toSet()
+val changeLog: String = revJo.get("change_log").asString
+val recommended: Boolean = revJo.get("recommended").asBoolean
+
 val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
+val vcName = "version_check.json"
 val vcFile: File = wrkDir.resolve(vcName).toFile()
-
-val gp: Map<String, String> = wrkDir.resolve("gradle.properties")
-        .let { Files.lines(it) }
-        .filter { it.isNotBlank() }
-        .filter { !it.trim().startsWith("#") }
-        .map { it.split("=") }
-        .collect(Collectors.toMap({ it[0].trim() }, { it[1].trim() }))
-
-val version = rawVersion.substring(1)
-val defaultHomepage = "https://github.com/$repo/releases"
-var mcVersions = setOf(gp["minecraft_version"] ?: gp["mc_version"])
-gp["support_versions"]?.let { str -> mcVersions += str.split(",").map { it.trim() } }
-
-val changeLog = rawChangeLog.let {
-    val line = it.lines().filter { tis -> tis.isNotEmpty() }
-    var ret = ""
-    for (i in line.indices) {
-        val lie = line[i]
-        if (lie.startsWith("### ") && (i == line.size - 1 || line[i + 1].startsWith("### ")))
-            continue
-
-        ret += if (lie.startsWith("### ")) {
-            lie.substring("### ".length) + "\n"
-        } else {
-            lie + "\n"
-        }
-    }
-    return@let ret
-}
-
-val recommended = gp["release_type"]?.equals("release", true) ?: true
 
 var jo: JsonObject
 
