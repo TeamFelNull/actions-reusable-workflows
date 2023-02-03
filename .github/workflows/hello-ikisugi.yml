@@ -9,4 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo
-        run: echo "Hello Ikisugi!"
+        run: |
+          pwd
+          ls
