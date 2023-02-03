@@ -21,7 +21,6 @@ runs:
     - name: Version Verification #バージョン検証
       shell: bash
       run: |
-        echo "${{ github.action_path }}/scripts/version_verification.main.kts"
         TAG="${{ github.ref_name }}"
         TAG_BRANCHES=`git branch -a --contains tags/$TAG | tail -n +2`
         DEFAULT_BRANCH=`git remote show origin | grep 'HEAD branch' | awk '{print $NF}'`
