@@ -42,7 +42,8 @@ jobs:
           
           CHANGELOG_NUM=`grep -n "^###" LATEST_CHANGELOG.md | sed -e 's/:.*//g' | head -n 1`
           if [ -n "$CHANGELOG_NUM" ]; then
-            tail -n +$CHANGELOG_NUM LATEST_CHANGELOG.md > LATEST_CHANGELOG.md
+            tail -n +$CHANGELOG_NUM LATEST_CHANGELOG.md > LATEST_CHANGELOG_TMP.md
+            mv LATEST_CHANGELOG_TMP.md LATEST_CHANGELOG.md
           fi
           
           echo "---ChangeLog---"
