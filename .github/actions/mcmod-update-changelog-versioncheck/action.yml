@@ -49,7 +49,7 @@ runs:
         
         CHANGELOG_NUM=`echo "$CHANGE_LOG" | grep -n "^###" | sed -e 's/:.*//g' | head -n 1`
         if [ -n "$CHANGELOG_NUM" ]; then
-          CHANGE_LOG_TMP =`echo "$CHANGE_LOG" | tail -n +$CHANGELOG_NUM`
+          CHANGE_LOG_TMP=`echo "$CHANGE_LOG" | tail -n +$CHANGELOG_NUM`
           CHANGE_LOG="$CHANGE_LOG_TMP"
         fi
         
