@@ -38,6 +38,16 @@ runs:
         
         CHANGE_LOG=`./gradlew getChangelog --console=plain -q --no-header --no-summary --no-links --unreleased`
         
+        CHANGELOG_NUM=`echo $CHANGE_LOG | grep -n "^###" | sed -e 's/:.*//g' | head -n 1`
+        if [ -n "$CHANGELOG_NUM" ]; then
+          CHANGE_LOG_TMP =`tail -n +$CHANGELOG_NUM "$CHANGE_LOG"`
+          CHANGE_LOG="$CHANGE_LOG_TMP"
+        fi
+        
+        echo "---ChangeLog---"
+        echo $CHANGE_LOG
+        echo "---------------"
+        
         chmod +x ${{ github.action_path }}/scripts/project_verification.main.kts
         ${{ github.action_path }}/scripts/project_verification.main.kts "$TAG" "$CHANGE_LOG"
 
