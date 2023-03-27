@@ -53,7 +53,7 @@ jobs:
       - name: Build And Release
         shell: bash
         run: |
-          if [ -d ../fabric ] && [ -d ../forge ]; then
+          if [ -d ./fabric ] && [ -d ./forge ]; then
           mkdir -p /home/runner/.gradle/caches/fabric-loom/assets
           fi
           
