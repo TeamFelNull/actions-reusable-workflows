@@ -53,6 +53,10 @@ jobs:
       - name: Build And Release
         shell: bash
         run: |
+          if [ -d ../fabric/build/libs ] && [ -d ../forge/build/libs ]; then
+          mkdir -p /home/runner/.gradle/caches/fabric-loom/assets
+          fi
+          
           ./gradlew ${{ inputs.build_tasks }} --stacktrace --no-daemon
         env:
           curesforgeapikey: ${{ secrets.curseforge_token }}
