@@ -1,6 +1,9 @@
 on:
   workflow_call:
     inputs:
+      before_build_tasks:
+        required: false
+        type: string
       build_tasks:
         required: true
         type: string
@@ -55,6 +58,10 @@ jobs:
         run: |
           if [ -d ./fabric ] && [ -d ./forge ]; then
           mkdir -p /home/runner/.gradle/caches/fabric-loom/assets
+          fi
+          
+          if [ -n "${{ inputs.before_build_tasks }}" ]; then
+          ./gradlew ${{ inputs.before_build_tasks }} --stacktrace --no-daemon
           fi
           
           ./gradlew ${{ inputs.build_tasks }} --stacktrace --no-daemon
