@@ -24,4 +24,4 @@ jobs:
       - name: Update Changelog and Version Check
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck@master
         with:
-          update_forge_version_check: ${{ inputs.update_forge_version_check }}
+          update_forge_version_check: ${{ fromJson(github.event.inputs.update_forge_version_check )}}

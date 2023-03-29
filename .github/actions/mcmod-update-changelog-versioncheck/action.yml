@@ -5,6 +5,7 @@ description: The Update Changelog and Version Check
 inputs:
   update_forge_version_check:
     description: Update Forge Version Check
+    type: boolean
 
 runs:
   using: composite
@@ -44,7 +45,7 @@ runs:
         echo "Commit done!"
 
     - name: Update Commit Version Check #バージョン確認Jsonを更新してコミット
-      if: ${{ inputs.update_forge_version_check }}
+      if: inputs.update_forge_version_check
       shell: bash
       run: |
         DEFAULT_BRANCH="${{ steps.checkTagByBranch.outputs.default_branch_result }}"
