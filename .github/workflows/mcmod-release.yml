@@ -1,18 +1,18 @@
 on:
   workflow_call:
     inputs:
-      before_build_tasks:
+      before_build_tasks: #ビルド前に実行するgradleコマンド(データジェネレータの実行などに利用)
         required: false
         type: string
-      build_tasks:
+      build_tasks: #ビルドする際に実行するgradleコマンド
         required: true
         type: string
     secrets:
-      curseforge_token:
+      curseforge_token: #CurseForgeのトークン
         required: false
-      modrinth_token:
+      modrinth_token: #Modrinthのトークン
         required: false
-      maven_password:
+      maven_password: #Mavenのパスワード
         required: false
 defaults:
   run:
@@ -67,7 +67,7 @@ jobs:
           ./gradlew ${{ inputs.build_tasks }} --stacktrace --no-daemon
         env:
           curesforgeapikey: ${{ secrets.curseforge_token }}
-          modrinthapikey:  ${{ secrets.modrinth_token }}
+          modrinthapikey: ${{ secrets.modrinth_token }}
           mavenpassword: ${{ secrets.maven_password }}
 
       - name: Collect Releases

@@ -1,5 +1,10 @@
 on:
   workflow_call:
+    inputs:
+      update_forge_version_check: #Forgeのバージョン確認用Jsonを更新するかどうか
+        required: false
+        type: boolean
+        default: true
 defaults:
   run:
     shell: bash
@@ -18,3 +23,5 @@ jobs:
 
       - name: Update Changelog and Version Check
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck@master
+        with:
+          update_forge_version_check: ${{ inputs.update_forge_version_check }}
