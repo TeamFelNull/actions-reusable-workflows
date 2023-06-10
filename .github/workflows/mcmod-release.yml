@@ -1,3 +1,4 @@
+#MinecraftのMODをリリース
 on:
   workflow_call:
     inputs:
@@ -22,22 +23,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout #チェックアウト
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup
+      - name: Setup #セットアップ
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
 
-      - name: Verification
+      - name: Verification #検証
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-release-verification@master
         with:
           curseforge-token: ${{ secrets.curseforge_token }}
           modrinth-token: ${{ secrets.modrinth_token }}
           maven-password: ${{ secrets.maven_password }}
 
-      - name: Generate Changelog
+      - name: Generate Changelog #変更ログを生成
         shell: bash
         run: |
           ./gradlew patchChangelog
@@ -53,7 +54,7 @@ jobs:
           cat LATEST_CHANGELOG.md
           echo "---------------"
 
-      - name: Build And Release
+      - name: Build And Release #ビルドとリリース
         shell: bash
         run: |
           if [ -d ./fabric ] && [ -d ./forge ]; then
@@ -70,7 +71,7 @@ jobs:
           modrinthapikey: ${{ secrets.modrinth_token }}
           mavenpassword: ${{ secrets.maven_password }}
 
-      - name: Collect Releases
+      - name: Collect Releases #リリースするファイルを収集
         shell: bash
         run: |
           mkdir release
@@ -85,13 +86,18 @@ jobs:
           cp -r ../build/libs/. ./
           fi
 
-      - name: Upload Artifact
+      - name: Generate Hash #リリースするファイルのハッシュファイルを生成
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/hashing-directory@master
+        with:
+          directory_path: "${{ github.workspace }}/release"
+
+      - name: Upload Artifact #アーティファクトをアップロード
         uses: actions/upload-artifact@v3
         with:
           name: releases
           path: release/*
 
-      - name: GitHub Releases
+      - name: GitHub Releases #Githubにリリース
         uses: softprops/action-gh-release@v1
         with:
           body_path: LATEST_CHANGELOG.md
