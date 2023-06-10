@@ -1,0 +1,17 @@
+#指定されたディレクトリ内全てのファイルごとにハッシュを求めて、Jsonファイルとして出力する
+name: Hashing Directory
+description: Calculate and print hashes of all files in a directory
+
+inputs:
+  directory_path:
+    description: Target Directory Path
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Hashing Directory #ディレクトリ内のファイルからハッシュを求める
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/scripts/hashing_directory.main.kts
+        ${{ github.action_path }}/scripts/hashing_directory.main.kts "${{ inputs.directory_path }}"
