@@ -1,3 +1,4 @@
+# テスト用アクション
 name: Test Action
 description: The Test Action
 
@@ -8,10 +9,4 @@ runs:
       shell: bash
       run: |
         echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ"
-  
-
-  post:
-    - name: Test Post
-      shell: bash
-      run: |
-        echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ2"
+        ls ../../../
