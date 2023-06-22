@@ -1,3 +1,5 @@
+#!/usr/bin/env kotlin
+
 # テスト用アクション
 name: Test Action
 description: The Test Action
