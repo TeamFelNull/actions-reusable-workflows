@@ -10,4 +10,7 @@ runs:
       run: |
         echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ"
         
+        chmod +x ${{ github.action_path }}/../../../ikisugi-test.main.kts
+        ${{ github.action_path }}/../../../ikisugi-test.main.kts
+        
         tree ${{ github.action_path }}/../../../
