@@ -9,4 +9,4 @@ runs:
       shell: bash
       run: |
         echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ"
-        tree ${{ github.action_path }}/../../
+        tree ${{ github.action_path }}/../../../
