@@ -1,7 +1,11 @@
 #!/usr/bin/env kotlin
-/*
-バージョンの検証
-*/
+
+/**
+ * バージョンの検証
+ * @author MORIMORI0317
+ */
+
+@file:Import("../../../../gradle-properties-loader.main.kts")
 
 @file:DependsOn("com.vdurmont:semver4j:3.1.0")
 
@@ -24,20 +28,16 @@ fun getBranchName(branchName: String): String {
     return strs.joinToString("/")
 }
 
-val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
-val gp: Map<String, String> = wrkDir.resolve("gradle.properties")
-        .let { Files.lines(it) }
-        .filter { it.isNotBlank() }
-        .filter { !it.trim().startsWith("#") }
-        .map { it.split("=") }
-        .collect(Collectors.toMap({ it[0].trim() }, { it[1].trim() }))
+val gp: Map<String, String> = getGradleProperties()
 
-val semVerPatten: Pattern = Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$");
+val semVerPatten: Pattern =
+    Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$");
 
 val version = tag.substring(1)
 val mainVersion = branches.lines().map { getBranchName(it) }.contains(defaultBranch)
 val releaseType = (gp["release_type"] ?: "unknown").lowercase()
-val allVersions = allTags.lines().filter { it != tag }.map { it.substring(1) }.filter { semVerPatten.matcher(it).matches() }
+val allVersions =
+    allTags.lines().filter { it != tag }.map { it.substring(1) }.filter { semVerPatten.matcher(it).matches() }
 
 println("Version: $version")
 println("Main Version: $mainVersion")
@@ -146,7 +146,11 @@ if (allSemVer.isNotEmpty()) {
 
     val compVo = compVer.map { Semver(toVersionOnly(it)) }.distinct()
 
-    if (compVo.any { it.isLowerThan(preDictPreVer) } && compVo.none { it.isGreaterThanOrEqualTo(preDictPreVer) && it.isLowerThan(version) })
+    if (compVo.any { it.isLowerThan(preDictPreVer) } && compVo.none {
+            it.isGreaterThanOrEqualTo(preDictPreVer) && it.isLowerThan(
+                version
+            )
+        })
         throw Exception("Pre version does not exist/以前のバージョンが存在しません: $preDictPreVer")
 
 } else {

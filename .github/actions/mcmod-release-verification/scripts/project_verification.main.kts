@@ -1,7 +1,11 @@
 #!/usr/bin/env kotlin
-/*
-プロジェクトの検証
-*/
+
+/**
+ * プロジェクトの検証
+ * @author MORIMORI0317
+ */
+
+@file:Import("../../../../gradle-properties-loader.main.kts")
 
 import java.io.File
 import java.nio.file.Files
@@ -13,7 +17,8 @@ val tag = args[0]
 val changeLog = args[1]
 val version = tag.substring(1)
 
-if (changeLog.lines().filter { it.trim().isNotEmpty() }.none { !it.trim().startsWith("### ") && it.trim().startsWith("- ") })
+if (changeLog.lines().filter { it.trim().isNotEmpty() }
+        .none { !it.trim().startsWith("### ") && it.trim().startsWith("- ") })
     throw Exception("Unwritten change log/更新ログが未記述です")
 
 fun assertFile(pathStr: String) {
@@ -25,13 +30,7 @@ assertFile("CHANGELOG.md")
 assertFile("README.md")
 assertFile("LICENSE")
 
-val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
-val gp: Map<String, String> = wrkDir.resolve("gradle.properties")
-        .let { Files.lines(it) }
-        .filter { it.isNotBlank() }
-        .filter { !it.trim().startsWith("#") }
-        .map { it.split("=") }
-        .collect(Collectors.toMap({ it[0].trim() }, { it[1].trim() }))
+val gp: Map<String, String> = getGradleProperties()
 
 fun assertGradleProperties(name: String, orName: String) {
     if (gp[name] == null && gp[orName] == null)

@@ -1,7 +1,11 @@
 #!/usr/bin/env kotlin
-/*
-リリース先の検証
-*/
+
+/**
+ * リリース先の検証
+ * @author MORIMORI0317
+ */
+
+@file:Import("../../../../gradle-properties-loader.main.kts")
 
 @file:DependsOn("com.google.code.gson:gson:2.10.1")
 @file:DependsOn("org.apache.commons:commons-lang3:3.12.0")
@@ -29,15 +33,11 @@ val curseforgeToken: String? = System.getenv("curseforgetoken")
 val mavenPutPass: String? = System.getenv("mavenpassword")
 
 val gson = Gson()
-val executor: ExecutorService = Executors.newCachedThreadPool(BasicThreadFactory.Builder().namingPattern("verification-thread-%d").daemon(true).build());
+val executor: ExecutorService = Executors.newCachedThreadPool(
+    BasicThreadFactory.Builder().namingPattern("verification-thread-%d").daemon(true).build()
+)
 
-val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
-val gp: Map<String, String> = wrkDir.resolve("gradle.properties")
-        .let { Files.lines(it) }
-        .filter { it.isNotBlank() }
-        .filter { !it.trim().startsWith("#") }
-        .map { it.split("=") }
-        .collect(Collectors.toMap({ it[0].trim() }, { it[1].trim() }))
+val gp: Map<String, String> = getGradleProperties()
 
 fun toCheckStr(str: String): String {
     var ret = str.lowercase()
@@ -98,7 +98,8 @@ fun modrinthCheck(projectId: String) {
         }
 
         val client = HttpClient.newHttpClient()
-        val req = HttpRequest.newBuilder(URI(url)).GET().header("user-agent", "$rep/release-verification $uaContact").build()
+        val req =
+            HttpRequest.newBuilder(URI(url)).GET().header("user-agent", "$rep/release-verification $uaContact").build()
         val res = client.send(req, HttpResponse.BodyHandlers.ofInputStream())
 
         jo = res.body().use {
