@@ -8,9 +8,13 @@ runs:
     - name: Test
       shell: bash
       run: |
-        echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ"
+        chmod +x ${{ github.action_path }}/scripts/ikisugi-test.main.kts
+        ${{ github.action_path }}/scripts/ikisugi-test.main.kts
         
-        chmod +x ${{ github.action_path }}/../../../ikisugi-test.main.kts
-        ${{ github.action_path }}/../../../ikisugi-test.main.kts
-        
-        tree ${{ github.action_path }}/../../../
+
+#         echo "ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ"
+#
+#         chmod +x ${{ github.action_path }}/../../../ikisugi-test.main.kts
+#         ${{ github.action_path }}/../../../ikisugi-test.main.kts
+#
+#         tree ${{ github.action_path }}/../../../
