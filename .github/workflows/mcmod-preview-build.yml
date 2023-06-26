@@ -38,7 +38,7 @@ jobs:
         with:
           maven-password: ${{ secrets.maven_password }}
 
-      - name: Build And Release #ビルド
+      - name: Build #ビルド
         shell: bash
         run: |
           if [ -d ./fabric ] && [ -d ./forge ]; then
@@ -53,7 +53,7 @@ jobs:
         env:
           mavenpassword: ${{ secrets.maven_password }}
 
-      - name: Collect Releases #リリースするファイルを収集
+      - name: Collect Build #リリースするファイルを収集
         shell: bash
         run: |
           mkdir release

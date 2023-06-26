@@ -64,6 +64,11 @@ val allSemVer = allVersions.map {
         return@map null;
     }
 }.filterNotNull()
+
+if (semVer.build != null) {
+    throw Exception("Contains build number/ビルドナンバーが含まれています: ${semVer.build}")
+}
+
 val verSuffixes: Array<String> = semVer.suffixTokens;
 
 fun toVersionOnly(targetSemVer: Semver): String {
