@@ -23,12 +23,7 @@ val repo = args[2]
 
 val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
 
-val gp: Map<String, String> = wrkDir.resolve("gradle.properties")
-        .let { Files.lines(it) }
-        .filter { it.isNotBlank() }
-        .filter { !it.trim().startsWith("#") }
-        .map { it.split("=") }
-        .collect(Collectors.toMap({ it[0].trim() }, { it[1].trim() }))
+val gp: Map<String, String> = getGradleProperties()
 
 val version = rawVersion.substring(1)
 val defaultHomepage = "https://github.com/$repo/releases"

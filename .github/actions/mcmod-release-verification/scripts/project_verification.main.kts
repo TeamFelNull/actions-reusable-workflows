@@ -48,7 +48,7 @@ assertGradleProperties("mod_display_name", "mod_name")
 assertGradleProperties("version", "mod_version")
 assertGradleProperties("release_type")
 
-var modVersion = gp["version"] ?: gp["mod_version"]
+var modVersion = getModVersion(gp)
 
 if (version != modVersion)
     throw Exception("gradle.properties version and tag version do not match/gradle.propertiesのバージョンとタグのバージョンが一致しません: $version")

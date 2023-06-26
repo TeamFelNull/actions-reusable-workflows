@@ -53,14 +53,9 @@ val allVersions = allTags.lines()
     .filter { semVerPatten.matcher(it).matches() }
 
 /**
- * GradleProperties
- */
-val gp: Map<String, String> = getGradleProperties()
-
-/**
  * プロジェクトのバージョン
  */
-var projectVersion = gp["version"] ?: gp["mod_version"]
+var projectVersion = getModVersion()
 
 println("Current Branch: $currentBranch")
 println("Default Branch: $defaultBranch")
