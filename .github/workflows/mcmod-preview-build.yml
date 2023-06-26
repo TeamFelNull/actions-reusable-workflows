@@ -27,6 +27,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Update Version # バージョン更新
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-preview-build-update-version@master
+
       - name: Setup # セットアップ
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
 
