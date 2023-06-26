@@ -16,7 +16,7 @@ import com.vdurmont.semver4j.Semver
 /**
  * 現在のバージョン
  */
-val currentVersion = Semver("1.2.3-beta.1+pre.39") //1.2.3-beta.1+pre.1
+val currentVersion = getModVersion()
 
 var nextVersion: Semver
 
