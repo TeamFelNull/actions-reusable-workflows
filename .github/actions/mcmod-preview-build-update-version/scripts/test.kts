@@ -1,8 +1,8 @@
 #!/usr/bin/env kotlin
 
-@file:Import("../../../../gradle-properties-loader.main.kts")
+@file:DependsOn("com.vdurmont:semver4j:3.1.0")
 
-val modver=getModVersion()
+import com.vdurmont.semver4j.Semver
 
-println(modver)
+println(Semver("1.0.0"))
 println("ｳｧｧ!!ｵﾚﾓｲｯﾁｬｳｩｩｩ!!!ｳｳｳｳｳｳｳｳｳｩｩｩｩｩｩｩｩｳｳｳｳｳｳｳｳ!ｲｨｨｲｨｨｨｲｲｲｨｲｲｲｲ")
