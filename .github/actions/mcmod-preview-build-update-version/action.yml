@@ -1,6 +1,6 @@
 # 動作確認用ビルドのバージョンを更新
-name: Preview Build Verification
-description: Validation before preview build
+name: Preview Build Update Version
+description: Update version of build for operation check
 
 runs:
   using: composite
@@ -8,10 +8,12 @@ runs:
     - name: Update Version # バージョン更新
       shell: bash
       run: |
-        chmod +x ${{ github.action_path }}/scripts/update_version.kts
-        ${{ github.action_path }}/scripts/update_version.kts
+        chmod +x ${{ github.action_path }}/scripts/test.kts
+        ${{ github.action_path }}/scripts/test.kts
+#        chmod +x ${{ github.action_path }}/scripts/update_version.kts
+#        ${{ github.action_path }}/scripts/update_version.kts
 
-    - name: Commit New Version
+    - name: Commit New Version # バージョン更新をコミット
       shell: bash
       run: |
         git config user.email "action@github.com"
