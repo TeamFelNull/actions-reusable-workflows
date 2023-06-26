@@ -8,10 +8,8 @@ runs:
     - name: Update Version # バージョン更新
       shell: bash
       run: |
-        chmod +x ${{ github.action_path }}/scripts/test.kts
-        ${{ github.action_path }}/scripts/test.kts
-#        chmod +x ${{ github.action_path }}/scripts/update_version.kts
-#        ${{ github.action_path }}/scripts/update_version.kts
+        chmod +x ${{ github.action_path }}/scripts/update_version.main.kts
+        ${{ github.action_path }}/scripts/update_version.main.kts
 
     - name: Commit New Version # バージョン更新をコミット
       shell: bash
