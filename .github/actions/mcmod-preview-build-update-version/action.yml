@@ -1,0 +1,23 @@
+# 動作確認用ビルドのバージョンを更新
+name: Preview Build Verification
+description: Validation before preview build
+
+runs:
+  using: composite
+  steps:
+    - name: Update Version # バージョン更新
+      shell: bash
+      run: |
+        chmod +x ${{ github.action_path }}/scripts/update_version.kts
+        ${{ github.action_path }}/scripts/update_version.kts
+
+    - name: Commit New Version
+      shell: bash
+      run: |
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+        git add ./gradle.properties
+        git commit -m "Update Preview Build Version"
+        git push origin "${{ github.ref_name }}"
+        echo "Commit done!"
+        

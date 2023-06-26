@@ -3,7 +3,7 @@ name: Preview Build Verification
 description: Validation before preview build
 
 inputs:
-  maven-password: # Mavenのパスワード
+  maven-password: # Mavenのパスワード(今のところ未使用)
     description: Maven Password
     required: false
 

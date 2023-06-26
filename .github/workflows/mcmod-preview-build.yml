@@ -1,18 +1,18 @@
-#動作確認用ビルドを行う
-# 手動(workflow_dispatch)で実行することを前提で作成しています
+# 動作確認用ビルドを行う
+# 手動(workflow_dispatch)で実行することが前提
 name: Preview Build
 
 on:
   workflow_call:
     inputs:
-      before_build_tasks: #ビルド前に実行するgradleコマンド(データジェネレータの実行などに利用)
+      before_build_tasks: # ビルド前に実行するgradleコマンド(データジェネレータの実行などに利用)
         required: false
         type: string
-      build_tasks: #ビルドする際に実行するgradleコマンド
+      build_tasks: # ビルドする際に実行するgradleコマンド
         required: true
         type: string
     secrets:
-      maven_password: #Mavenのパスワード
+      maven_password: # Mavenのパスワード
         required: false
 defaults:
   run:
@@ -22,20 +22,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout #チェックアウト
+      - name: Checkout # チェックアウト
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Setup #セットアップ
+      - name: Setup # セットアップ
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
 
-#      - name: Verification #検証
-#        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-release-verification@master
-#        with:
-#          curseforge-token: ${{ secrets.curseforge_token }}
-#          modrinth-token: ${{ secrets.modrinth_token }}
-#          maven-password: ${{ secrets.maven_password }}
+      - name: Verification # 検証
+        uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-preview-build-verification@master
+        with:
+          maven-password: ${{ secrets.maven_password }}
 
       - name: Build And Release #ビルド
         shell: bash
