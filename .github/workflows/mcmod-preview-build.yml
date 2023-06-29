@@ -27,6 +27,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore cache # キャッシュを復元
+        id: cache-primes-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            .gradle/loom-cache
+            .gradle/caches
+            .gradle/wrapper
+          key: gradle
+
       - name: Update Version # バージョン更新
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-preview-build-update-version@master
 
@@ -78,3 +88,13 @@ jobs:
         with:
           name: releases
           path: release/*
+
+      - name: Save cache #キャッシュを保存
+        uses: actions/cache/save@v3
+        if: startsWith(github.ref, 'refs/heads/')
+        with:
+          path: |
+            .gradle/loom-cache
+            .gradle/caches
+            .gradle/wrapper
+          key: gradle
