@@ -32,9 +32,9 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: |
-            .gradle/loom-cache
-            .gradle/caches
-            .gradle/wrapper
+            ~/.gradle/loom-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
           key: gradle
 
       - name: Update Version # バージョン更新
@@ -94,7 +94,7 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/')
         with:
           path: |
-            .gradle/loom-cache
-            .gradle/caches
-            .gradle/wrapper
+            ~/.gradle/loom-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
           key: gradle
