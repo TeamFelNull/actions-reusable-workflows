@@ -19,6 +19,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Restore cache # キャッシュを復元
+        id: cache-primes-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            ~/.gradle/loom-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle
+
       - name: Setup #セットアップ
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
 
