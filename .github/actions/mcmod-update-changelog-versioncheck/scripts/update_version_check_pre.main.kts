@@ -2,6 +2,7 @@
 /*
 Forgeのバージョン確認Jsonを更新
 */
+@file:Import("../../../../gradle-properties-loader.main.kts")
 
 @file:DependsOn("com.google.code.gson:gson:2.10.1")
 @file:DependsOn("com.vdurmont:semver4j:3.1.0")
