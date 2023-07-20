@@ -37,7 +37,7 @@ val latestTag = args[3]
  * セムバージョンのパターン
  */
 val semVerPatten: Pattern =
-    Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$");
+        Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$");
 
 /**
  * 現在のブランチがメインのバージョンかどうか
@@ -48,9 +48,9 @@ val mainVersion = currentBranch == defaultBranch
  * すべてのバージョン一覧
  */
 val allVersions = allTags.lines()
-    .filter { it.isNotEmpty() }
-    .map { it.substring(1) }
-    .filter { semVerPatten.matcher(it).matches() }
+        .filter { it.isNotEmpty() }
+        .map { it.substring(1) }
+        .filter { semVerPatten.matcher(it).matches() }
 
 /**
  * プロジェクトのバージョン
@@ -81,8 +81,8 @@ val allSemVer = allVersions.map {
         return@map null;
     }
 }
-    .filterNotNull()
-    .distinct()
+        .filterNotNull()
+        .distinct()
 
 // プロジェクトのバージョンが存在しているか確認
 if (projectVersion == null) {
@@ -111,7 +111,9 @@ if (!mainVersion) {
 
     if (latestVersion != null) {
         beforeVersions = beforeVersions
-            .filter { it.isLowerThanOrEqualTo(latestVersion) }
+                .filter { it.isLowerThanOrEqualTo(latestVersion) }
+    } else {
+        beforeVersions = listOf()
     }
 }
 
