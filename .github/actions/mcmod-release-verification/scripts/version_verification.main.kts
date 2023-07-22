@@ -96,7 +96,8 @@ val allParsedSemver = allVersions.mapNotNull { parseSemver(it) }
 println("Version: $version")
 println("Main Version: $mainVersion")
 println("Release Type: $releaseType")
-println("All Versions: $allParsedSemver")
+println("All Versions: $allVersions")
+println("All Parsed Versions: $allParsedSemver")
 println()
 
 val stabilityOrder = listOf("release", "beta", "alpha")
