@@ -86,18 +86,15 @@ val mainVersion = branches.lines()
 
 val releaseType = (gp["release_type"] ?: "unknown").lowercase()
 
-val allVersions = allTags.lines()
+val allParsedSemver = allTags.lines()
     .filter { it != tag }
     .map { it.substring(1) }
-    .filter { semVerPatten.matcher(it).matches() }
-
-val allParsedSemver = allVersions.mapNotNull { parseSemver(it) }
+    .mapNotNull { parseSemver(it) }
 
 println("Version: $version")
 println("Main Version: $mainVersion")
 println("Release Type: $releaseType")
-println("All Versions: $allVersions")
-println("All Parsed Versions: $allParsedSemver")
+println("All Versions: $allParsedSemver")
 println()
 
 val stabilityOrder = listOf("release", "beta", "alpha")
@@ -160,7 +157,7 @@ if (verSuffixes.isEmpty()) {
 
     if (verSuffixes[1].toInt() >= 2) {
         val need = toVersionOnly(semVer) + "-" + verSuffixes[0] + "." + (verSuffixes[1].toInt() - 1);
-        if (!allVersions.contains(need))
+        if (!allParsedSemver.map { it.version.toString() }.contains(need))
             throw Exception("Previous suffix version number does not exist/以前のサフィックスのバージョン番号が存在しません: $need")
     }
 }
