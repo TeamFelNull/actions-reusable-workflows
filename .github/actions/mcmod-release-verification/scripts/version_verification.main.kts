@@ -28,21 +28,75 @@ fun getBranchName(branchName: String): String {
     return strs.joinToString("/")
 }
 
+/**
+ * パーズされたSemverと元のバージョン文字列を保持するクラス
+ */
+class ParsedSemver(val version: Semver, val rawText: String) {
+
+    /**
+     * 元の文字列がSemverかどうか
+     */
+    fun isSemverRawText(): Boolean {
+        return semVerPatten.matcher(this.rawText).matches()
+    }
+
+    override fun toString(): String {
+
+        if (!isSemverRawText()) {
+            return "$version($rawText)"
+        }
+
+        return version.toString()
+    }
+}
+
+// バージョン文字列をパーズする
+fun parseSemver(versionText: String): ParsedSemver? {
+    var semVersion: Semver? = null;
+
+    try {
+        semVersion = Semver(versionText)
+    } catch (_: SemverException) {
+    }
+
+    // Semverを採用する前のバージョン文字列だった場合に変換を試みる (1.8 -> 1.8.0)
+    if (semVersion == null && versionText.split(".").size == 2) {
+        try {
+            semVersion = Semver("$versionText.0")
+        } catch (_: SemverException) {
+        }
+    }
+
+    if (semVersion != null) {
+        return ParsedSemver(semVersion, versionText)
+    }
+
+    return null
+}
+
 val gp: Map<String, String> = getGradleProperties()
 
 val semVerPatten: Pattern =
     Pattern.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$");
 
 val version = tag.substring(1)
-val mainVersion = branches.lines().map { getBranchName(it) }.contains(defaultBranch)
+val mainVersion = branches.lines()
+    .map { getBranchName(it) }
+    .contains(defaultBranch)
+
 val releaseType = (gp["release_type"] ?: "unknown").lowercase()
-val allVersions =
-    allTags.lines().filter { it != tag }.map { it.substring(1) }.filter { semVerPatten.matcher(it).matches() }
+
+val allVersions = allTags.lines()
+    .filter { it != tag }
+    .map { it.substring(1) }
+    .filter { semVerPatten.matcher(it).matches() }
+
+val allParsedSemver = allVersions.mapNotNull { parseSemver(it) }
 
 println("Version: $version")
 println("Main Version: $mainVersion")
 println("Release Type: $releaseType")
-println("All Versions: $allVersions")
+println("All Versions: $allParsedSemver")
 println()
 
 val stabilityOrder = listOf("release", "beta", "alpha")
@@ -51,19 +105,6 @@ if (!semVerPatten.matcher(version).matches())
     throw Exception("Does not match SemVer/SemVerに一致しません")
 
 val semVer = Semver(version)
-val allSemVer = allVersions.map {
-    try {
-
-        val sem = Semver(it)
-        if (sem.suffixTokens.isNotEmpty()) {
-            if (sem.suffixTokens.size != 2 || sem.suffixTokens[0].all { r -> r.isDigit() } || sem.suffixTokens[1].any { r -> !r.isDigit() })
-                return@map null;
-        }
-        return@map sem
-    } catch (e: SemverException) {
-        return@map null;
-    }
-}.filterNotNull()
 
 if (semVer.build != null) {
     throw Exception("Contains build number/ビルドナンバーが含まれています: ${semVer.build}")
@@ -91,29 +132,30 @@ if (verSuffixes.isEmpty()) {
     if (verSuffixes.size != 2 || verSuffixes[0].all { it.isDigit() } || verSuffixes[1].any { !it.isDigit() })
         throw Exception("Suffix should be releaseType.number/サフィックスはreleaseType.numberにする必要があります")
 
-    allSemVer.forEach {
-        if (toVersionOnly(it) != toVersionOnly(semVer))
-            return@forEach
+    allParsedSemver.map { it.version }
+        .forEach {
+            if (toVersionOnly(it) != toVersionOnly(semVer))
+                return@forEach
 
-        var suffixesReleaseType = "release"
-        if (it.suffixTokens.isNotEmpty() && stabilityOrder.contains(it.suffixTokens[0]))
-            suffixesReleaseType = it.suffixTokens[0]
+            var suffixesReleaseType = "release"
+            if (it.suffixTokens.isNotEmpty() && stabilityOrder.contains(it.suffixTokens[0]))
+                suffixesReleaseType = it.suffixTokens[0]
 
-        val order = stabilityOrder.indexOf(verSuffixes[0])
-        val itOrder = stabilityOrder.indexOf(suffixesReleaseType)
+            val order = stabilityOrder.indexOf(verSuffixes[0])
+            val itOrder = stabilityOrder.indexOf(suffixesReleaseType)
 
-        if (itOrder < order)
-            throw Exception("Already stable version exists/さらに安定しているバージョンが存在します: $it")
+            if (itOrder < order)
+                throw Exception("Already stable version exists/さらに安定しているバージョンが存在します: $it")
 
-        if (suffixesReleaseType == verSuffixes[0]) {
-            var suffixesNumber = 0
-            if (it.suffixTokens.size == 2 && it.suffixTokens[1].all { r -> r.isDigit() })
-                suffixesNumber = it.suffixTokens[1].toInt()
+            if (suffixesReleaseType == verSuffixes[0]) {
+                var suffixesNumber = 0
+                if (it.suffixTokens.size == 2 && it.suffixTokens[1].all { r -> r.isDigit() })
+                    suffixesNumber = it.suffixTokens[1].toInt()
 
-            if (suffixesNumber >= verSuffixes[1].toInt())
-                throw Exception("Newer suffix number versions exist/さらに新しいサフィックス番号のバージョンが存在します: $it")
+                if (suffixesNumber >= verSuffixes[1].toInt())
+                    throw Exception("Newer suffix number versions exist/さらに新しいサフィックス番号のバージョンが存在します: $it")
+            }
         }
-    }
 
     if (verSuffixes[1].toInt() >= 2) {
         val need = toVersionOnly(semVer) + "-" + verSuffixes[0] + "." + (verSuffixes[1].toInt() - 1);
@@ -123,16 +165,16 @@ if (verSuffixes.isEmpty()) {
 }
 
 
-if (allSemVer.isNotEmpty()) {
-    var compVer: List<Semver> = ArrayList(allSemVer)
+if (allParsedSemver.isNotEmpty()) {
+    var compVer: List<ParsedSemver> = ArrayList(allParsedSemver)
 
     if (mainVersion) {
-        val lastVer = allSemVer.maxWith { a, b -> a.compareTo(b) }
-        if (lastVer.isGreaterThan(semVer))
+        val lastVer = allParsedSemver.maxWith { a, b -> a.version.compareTo(b.version) }
+        if (lastVer.version.isGreaterThan(semVer))
             throw Exception("New version exists/さらに新しいバージョンが存在します: $lastVer")
     } else {
         val predictNextVer = Semver("${semVer.major}.${semVer.minor}.${semVer.patch + 1}-${stabilityOrder.last()}.1")
-        compVer = allSemVer.filter { it.isLowerThan(predictNextVer) }
+        compVer = allParsedSemver.filter { it.version.isLowerThan(predictNextVer) }
     }
 
     val preDictPreVer = semVer.let {
@@ -149,7 +191,7 @@ if (allSemVer.isNotEmpty()) {
         }
     }
 
-    val compVo = compVer.map { Semver(toVersionOnly(it)) }.distinct()
+    val compVo = compVer.map { Semver(toVersionOnly(it.version)) }.distinct()
 
     if (compVo.any { it.isLowerThan(preDictPreVer) } && compVo.none {
             it.isGreaterThanOrEqualTo(preDictPreVer) && it.isLowerThan(
