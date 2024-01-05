@@ -6,6 +6,10 @@ on:
         required: false
         type: boolean
         default: true
+      update_neoforge_version_check: #NeoForgeのバージョン確認用Jsonを更新するかどうか
+        required: false
+        type: boolean
+        default: true
 defaults:
   run:
     shell: bash
@@ -36,3 +40,4 @@ jobs:
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-update-changelog-versioncheck@master
         with:
           update_forge_version_check: ${{ inputs.update_forge_version_check}}
+          update_neoforge_version_check: ${{ inputs.update_neoforge_version_check}}

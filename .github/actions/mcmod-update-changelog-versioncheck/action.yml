@@ -6,6 +6,9 @@ inputs:
   update_forge_version_check:
     description: Update Forge Version Check
     type: boolean
+  update_neoforge_version_check:
+    description: Update NeoForge Version Check
+    type: boolean
 
 runs:
   using: composite
@@ -45,7 +48,7 @@ runs:
         echo "Commit done!"
 
     - name: Update Commit Version Check #バージョン確認Jsonを更新してコミット
-      if: inputs.update_forge_version_check
+      if: inputs.update_forge_version_check || inputs.update_neoforge_version_check
       shell: bash
       run: |
         DEFAULT_BRANCH="${{ steps.checkTagByBranch.outputs.default_branch_result }}"
@@ -73,9 +76,17 @@ runs:
         fi
         
         chmod +x ${{ github.action_path }}/scripts/update_version_check_post.main.kts 
-        ${{ github.action_path }}/scripts/update_version_check_post.main.kts "$VERSION_CHECK_DATA"
-
+        
+        if [ "${{ inputs.update_forge_version_check }}" == "true" ]; then
+        ${{ github.action_path }}/scripts/update_version_check_post.main.kts "$VERSION_CHECK_DATA" "version_check.json"
         git add ./version_check.json
+        fi
+        
+        if [ "${{ inputs.update_neoforge_version_check }}" == "true" ]; then
+        ${{ github.action_path }}/scripts/update_version_check_post.main.kts "$VERSION_CHECK_DATA" "neoforge_version_check.json"
+        git add ./neoforge_version_check.json
+        fi
+        
         git commit -m "Update Version Check ${{ github.ref_name }}"
         git push origin $DEFAULT_BRANCH
         echo "Commit done!"

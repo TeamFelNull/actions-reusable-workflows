@@ -27,7 +27,7 @@ val changeLog: String = revJo.get("change_log").asString
 val recommended: Boolean = revJo.get("recommended").asBoolean
 
 val wrkDir: Path = System.getenv("GITHUB_WORKSPACE")?.let(Path::of) ?: Paths.get("./")
-val vcName = "version_check.json"
+val vcName = args[1]
 val vcFile: File = wrkDir.resolve(vcName).toFile()
 
 var jo: JsonObject
