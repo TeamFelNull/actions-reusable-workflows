@@ -67,7 +67,7 @@ jobs:
       - name: Build And Release #ビルドとリリース
         shell: bash
         run: |
-          if [ -d ./fabric ] && [ -d ./forge ]; then
+          if [ -d ./fabric ] || [ -d ./forge ] || [ -d ./neoforge ]; then
           mkdir -p /home/runner/.gradle/caches/fabric-loom/assets
           fi
           
@@ -88,12 +88,31 @@ jobs:
           cd release
           
           if [ -d ../fabric/build/libs ] && [ -d ../forge/build/libs ]; then
-          echo "Cloth platform..."
+          echo "Cloth platform (Fabric Forge)..."
           cp -r ../fabric/build/libs/. ./
           cp -r ../forge/build/libs/. ./
+          
+          elif [ -d ../forge/build/libs ] && [ -d ../neoforge/build/libs ]; then
+          echo "Cloth platform (Forge NeoForge)..."
+          cp -r ../forge/build/libs/. ./
+          cp -r ../neoforge/build/libs/. ./
+          
+          elif [ -d ../fabric/build/libs ] && [ -d ../neoforge/build/libs ]; then
+          echo "Cloth platform (Fabric NeoForge)..."
+          cp -r ../fabric/build/libs/. ./
+          cp -r ../neoforge/build/libs/. ./
+          
+          elif [ -d ../fabric/build/libs ] && [ -d ../forge/build/libs ] && [ -d ../neoforge/build/libs ]; then
+          echo "Cloth platform (Fabric Forge NeoForge)..."
+          cp -r ../fabric/build/libs/. ./
+          cp -r ../forge/build/libs/. ./
+          cp -r ../neoforge/build/libs/. ./
+          
           else
+          
           echo "Single platform..."
           cp -r ../build/libs/. ./
+          
           fi
 
       - name: Generate Hash #リリースするファイルのハッシュファイルを生成
