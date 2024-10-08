@@ -75,7 +75,7 @@ fun curesforgeCheck(projectId: String) {
     val name = jo.get("name").asString
     val slug = jo.get("slug").asString
 
-    val modName = gp["curesforge_name"] ?: gp["mod_display_name"] ?: gp["mod_name"]
+    val modName = gp["curesforge_name"] ?: gp["mod_display_name"] ?: gp["mod_name"] ?: gp["archives_name"]
     val chkName = modName?.let { toCheckStr(it) }
 
     if (toCheckStr(name) != chkName && toCheckStr(slug) != chkName)
@@ -116,7 +116,7 @@ fun modrinthCheck(projectId: String) {
     val title = jo.get("title").asString
     val slug = jo.get("slug").asString
 
-    val modName = gp["modrinth_name"] ?: gp["mod_display_name"] ?: gp["mod_name"]
+    val modName = gp["modrinth_name"] ?: gp["mod_display_name"] ?: gp["mod_name"] ?: gp["archives_name"]
     val chkName = modName?.let { toCheckStr(it) }
 
     if (toCheckStr(title) != chkName && toCheckStr(slug) != chkName)
