@@ -32,6 +32,11 @@ assertFile("LICENSE")
 
 val gp: Map<String, String> = getGradleProperties()
 
+fun assertGradleProperties(name: String, orName1: String, orName2: String) {
+    if (gp[name] == null && gp[orName1] == null && gp[orName2] == null)
+        throw Exception("Required value does not exist in gradle.properties/gradle.propertiesに必要な値が存在しません: $name,$orName1,$orName2")
+}
+
 fun assertGradleProperties(name: String, orName: String) {
     if (gp[name] == null && gp[orName] == null)
         throw Exception("Required value does not exist in gradle.properties/gradle.propertiesに必要な値が存在しません: $name,$orName")
@@ -44,7 +49,7 @@ fun assertGradleProperties(name: String) {
 
 assertGradleProperties("minecraft_version", "mc_version")
 assertGradleProperties("archives_base_name", "mod_id")
-assertGradleProperties("mod_display_name", "mod_name")
+assertGradleProperties("mod_display_name", "mod_name", "archives_name")
 assertGradleProperties("version", "mod_version")
 assertGradleProperties("release_type")
 
