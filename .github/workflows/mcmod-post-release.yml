@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout #チェックアウト
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Restore cache # キャッシュを復元
         id: cache-primes-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v6
         with:
           path: |
             ~/.gradle/loom-cache

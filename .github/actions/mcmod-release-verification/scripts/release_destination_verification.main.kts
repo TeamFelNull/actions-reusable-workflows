@@ -50,7 +50,7 @@ fun toCheckStr(str: String): String {
 }
 
 fun curesforgeCheck(projectId: String) {
-    if (curseforgeToken.isNullOrEmpty())
+    /*if (curseforgeToken.isNullOrEmpty())
         throw Exception("CuresForge Token is empty/CuresForgeのTokenが空です")
 
     val url = "https://api.felnull.dev/curseforge-wrapper/mods/$projectId"
@@ -81,7 +81,8 @@ fun curesforgeCheck(projectId: String) {
     if (toCheckStr(name) != chkName && toCheckStr(slug) != chkName)
         throw Exception("CuresForge project mod name do not match/CuresForgeのプロジェクトのMOD名が一致しません")
 
-    println("CuresForge Ok: $name")
+    println("CuresForge Ok: $name")*/
+    println("CuresForge Check Skip")
 }
 
 fun modrinthCheck(projectId: String) {

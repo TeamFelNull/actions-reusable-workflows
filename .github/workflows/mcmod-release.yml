@@ -24,13 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout #チェックアウト
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Restore cache # キャッシュを復元
         id: cache-primes-restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v6
         with:
           path: |
             ~/.gradle/loom-cache
@@ -121,13 +121,13 @@ jobs:
           directory_path: "${{ github.workspace }}/release"
 
       - name: Upload Artifact #アーティファクトをアップロード
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: releases
           path: release/*
 
       - name: GitHub Releases #Githubにリリース
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           body_path: LATEST_CHANGELOG.md
           files: release/*
