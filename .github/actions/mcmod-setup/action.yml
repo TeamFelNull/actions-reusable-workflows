@@ -2,17 +2,22 @@
 name: Setup
 description: The Setup
 
+inputs:
+  java_version:  #ビルドに使用するJavaのバージョン
+    description: Java Version
+    required: true
+
 runs:
   using: composite
   steps:
     - name: Setup JDK #JDKセットアップ
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v6
       with:
         distribution: 'corretto'
-        java-version: '21'
+        java-version: ${{ inputs.java_version }}
 
     - name: Setup Gradle #Gradleセットアップ
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/actions/setup-gradle@v6
       with:
         gradle-home-cache-cleanup: true
 

@@ -31,12 +31,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup JDK # JDKセットアップ
-        uses: actions/setup-java@v6
-        with:
-          distribution: 'corretto'
-          java-version: ${{ inputs.java_version }}
-
       - name: Restore cache # キャッシュを復元
         id: cache-primes-restore
         uses: actions/cache/restore@v6
@@ -52,6 +46,8 @@ jobs:
 
       - name: Setup # セットアップ
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-setup@master
+        with:
+          java_version: ${{ inputs.java_version }}
 
       - name: Verification # 検証
         uses: TeamFelnull/actions-reusable-workflows/.github/actions/mcmod-preview-build-verification@master
